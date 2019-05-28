@@ -20,12 +20,15 @@ The logging is then configure with the ProxySql Admin interface.
 
 ```bash
 docker network create --driver=bridge tst-net
+docker volume create --name=tst-mysql
+docker volume create --name=tst-proxysql
 ```
 
 ## connect a mysql instance
 
 ```bash
 docker run -d --name=tst-mysql \
+--mount source=tst-mysql,target=/var/lib/mysql \
 --network=tst-net \
 -p 33101:3306 \
 -e MYSQL_ROOT_PASSWORD=secret \
@@ -39,6 +42,7 @@ krislamote/mysql:0.1.0
 
 ```bash
 docker run -d --name=tst-proxysql \
+--mount source=tst-proxysql,target=/var/lib/proxysql \
 --network=tst-net \
 --publish 6032:6032 \
 --publish 6033:6033 \
